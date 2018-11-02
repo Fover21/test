@@ -1,0 +1,86 @@
+day82
+1. 
+	权限的控制
+		1. url代表权限
+		
+		2. 表结构
+			6张表
+				菜单表
+					标题 title
+					图标 icon
+					权重 weight
+				权限表
+					标题 title
+					权限 url  
+					URL 别名  name 
+					外键 menu 
+					外键 self
+					
+				角色表
+					标题 title
+					多对多  permissions
+				用户表
+					用户名
+					密码
+					多对多 roles 
+				用户和角色关系表
+				
+				角色和权限的关系表
+				
+		3. 知识点：
+			- 中间件
+				- 白名单
+				- request.breadcrumb_lidt = [ {title,url}]
+				- 权限的校验
+					- 从session中获取权限信息
+					- 循环权限信息
+						- 正则
+						- 匹配成功
+							- pid
+							- pname 
+				
+			- 登录成功后
+				- 权限信息的初识化
+					- ORM
+					- 数据结构
+						权限相关：
+						permission_dict = {
+							
+							'URL的别名'：{'url','title','id','pid','pname' }
+								
+						}
+						
+						菜单相关：
+						menu_dict = {
+							'菜单ID'：{
+								'title': 一级菜单的标题，
+								'icon': 一级菜单的图标，
+								'weight': 权重，
+								'children': [
+										{'url','title','id',}
+								]
+							}
+						}
+						
+					- session
+					
+			- 模板
+				- 二级菜单
+					- inclusion_tag 两个for循环
+					- request.curent_menu_id
+				
+				
+				- 路径导航
+					- inclusion_tag
+					request.breadcrumb_list
+					
+				- 权限粒度控制到按钮级别
+					- filter
+					- url 反向解析
+					
+					
+					
+				
+				
+					
+	
