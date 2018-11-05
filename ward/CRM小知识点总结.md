@@ -40,9 +40,13 @@
 
 # 4、向页面展示内容，如果不设置\__str__内置方法会返回对象
 
->
+>外键
 >
 >设置\__str__方法就是为了我们返回的不是一个对象，而是一个具体输出的值，我们可以通过\__str__来实现
+>
+>多对多
+>
+>自定义方法，去找管理对象\__str__
 
 # 5、直接向页面发送html代码
 
@@ -518,7 +522,7 @@ class Pagination:
 >      - 展示缴费记录
 >      - 添加、编辑缴费记录
 >
->1. 今日内容
+>4. 今日内容
 >
 >   1. 公户变私户的问题解决
 >
@@ -577,10 +581,11 @@ class Pagination:
 >        
 >        form_set = FormSet(request.POST)
 >        if form_set.is_valid():
->        	form_set.save()
+>        	form_set.save()	
 >        ```
 >
->        ​	
+
+# 21、往session中重新写入数据后需要重新登录
 
 # 权限管理   RBAC
 
@@ -1983,6 +1988,50 @@ class Pagination:
 >>    </div>
 >>{% endblock %}
 >>```
+
+
+
+># 菜单和权限的展示在一个页面
+>
+>```python
+># 菜单和权限的展示
+># 点击每一个菜单出现对应的权限信息
+>def menu_list(request):
+>    all_menu = models.Menu.objects.all()
+>    # 拿到菜单对应的菜单id
+>    mid = request.GET.get('mid')
+>    # 如果拿到菜单id代表着有子权限
+>    if mid:
+>        # 从子权限出发 拿到 父权限对应的菜单id对应的权限  或者  菜单对应的权限（也就是二级菜单） 因为自己关联自己（从父亲和儿子两方面出发）
+>        permission_query = models.Permission.objects.filter(Q(menu_id=mid) | Q(parent__menu_id=mid))
+>    # 如果没有菜单id则输出所有的权限信息
+>    else:
+>        permission_query = models.Permission.objects.all()
+>    # 拿到查询出的权限对应的信息
+>    all_permission = permission_query.values('id', 'url', 'title', 'name', 'menu_id', 'parent_id', 'menu__title')
+>    all_permission_dict = {}
+>    for item in all_permission:
+>        menu_id = item.get('menu_id')
+>        # 找到有菜单id的权限，将其存入字典，键为权限的id
+>        if menu_id:
+>            all_permission_dict[item['id']] = item
+>            # 可以改都是引用
+>            # 得到所有有菜单的权限后，将每一个权限都设置一个children键值对，用来存储子权限信息
+>            item['children'] = []
+>    for item in all_permission:
+>        pid = item.get('parent_id')
+>        # 如果有父id代表的是子权限
+>        if pid:
+>            # 如果是子权限，就将子权限的信息存入多上一步做的处理（有菜单的父权限）children中
+>            all_permission_dict[pid]['children'].append(item)
+>    return render(request, 'rbac/menu_list.html', {
+>        "mid": mid,
+>        "all_menu": all_menu,
+>        "all_permission_dict": all_permission_dict,
+>    })
+>```
+>
+>
 
 # 权限管理的自动化配置
 
