@@ -1,0 +1,660 @@
+	MVC   Model View Controller	
+	MVVM  Model View ViewModel  数据驱动视图
+	ES6的常用语法
+		-- 变量的提升
+		-- 模板字符串 ``  ${}
+		-- 数据解构
+		-- 类
+		-- 函数
+			-- 注意this跟普通函数的区别
+		-- 单体模式
+	Vue的常用指令
+		-- v-text  innerText
+		-- v-Html  innerHtml
+		-- v-for   :key
+		-- v-if v-else-if v-else   appendChild
+		-- v-show  display
+		-- v-on    @xxxx="自己处理的方法"
+		-- v-bind  :属性名称="属性的值"
+		-- v-model  
+			-- input
+			-- textarea
+			-- select
+		-- 指令修饰符
+			-- .lazy
+			-- .number
+			-- .trim
+		-- 计算属性
+			-- 放入缓存
+			-- 只有数据改变的时候才会重新计算
+		-- 数据的监听
+			-- 注意可变数据类型跟不可变数据类型的区别
+		-- 获取DOM
+			-- 给标签绑定ref属性  ref = "属性值"
+			-- this.$refs.属性值
+		-- 自定义指令
+			-- Vue.directive("指令名称", function(el, binding){
+					el 绑定指令的标签元素
+					binding 指令的所有信息
+			})
+	Vue的组件
+		-- 组件注册
+			-- 全局注册
+				--Vue.component("组件名称"，{})
+			-- 局部注册
+				-- const app = new Vue({
+						el: "#app",
+						components: {
+							组件的名称： 组件的配置信息
+						}
+				})
+			-- 子组件的注册
+				-- 在父组件中注册components
+			## 注意写组件标签
+			## 每个组件的template只识别一个作用域块
+		-- 通信
+			-- 父子的通信
+				-- 在父组件中给子组件绑定属性
+				-- 子组件通过props=["属性名称"]
+			-- 子父的通信
+				-- 子组件先提交事件
+					-- this.$emit("事件名称"，值)
+				-- 在父组件中给子组件绑定事件
+					-- <child @事件名称="父亲处理的方法"></child>
+			-- 非父子的通信
+					-- 声明中间调度器  
+					-- 其中一个组件向中间调度器提交事件
+					-- 另一个组件监听中间调度器的事件
+					-- 注意this的问题
+		-- 插槽
+			-- <slot><slot>
+			-- 命名的插槽
+		-- 混合
+			-- 代码重用的
+			-- Mixins=[base]
+	路由
+		-- 注册
+			-- let url = [
+				{
+					path: "/",
+					name: "home",
+					component: {
+						template: ``
+					}
+				}
+			]
+			-- let router = new VueRouter({
+					routes: url
+			})
+			-- const app = new Vue({
+					el: "#app",
+					router: router
+			})
+			-- <router-link to="/">首页</router-link>
+			-- <router-view></router-view>
+		-- 子路由
+			-- children: [
+				{}
+			]
+			-- 在父路由对应的组件的template里写router-link router-view
+			
+		-- 命名路由
+			-- name
+			-- 注意to加冒号动态绑定
+		-- 路由参数
+			-- {
+				path: "/course/:id",	
+			}
+			-- this.$route.params.id
+			-- this.$route.query.xxx
+			-- $route 是一个对象 存放当前路由的所有信息
+			-- $router  VueRouter实例化对象
+		-- 手动路由
+			--this.$router.push("/")
+			--this.$router.push({name: "xxx"})
+		-- 重定向
+			-- redirect：{name: "xxx"}
+		-- 路由的钩子
+			-- beforeEach
+				-- to
+				-- from
+				-- next
+			-- afterEach
+				-- to
+				-- from
+				
+	node.js / npm
+		-- npm
+		-- 管理工作目录
+			-- npm init -y
+		-- 下载包
+			-- npm i xxxx@0.0.0
+		-- 卸载
+			-- npm uninstall xxxx
+		-- 更新
+			-- npm update xxxx
+	webpack 
+		-- 下载
+			-- npm i webpack webpack-cli
+		-- 打包默认的入口文件
+			--src目录下的 index.js
+		-- 出口文件
+			-- dist目录的main.js
+	vue-cli
+		-- 帮助我们快速搭建项目的脚手架工具
+		-- 下载
+			-- npm i vue-cli
+		-- 用vue-cli帮助我们创建项目
+			-- vue init webpack xxxx
+		-- 启动项目
+			-- npm run dev
+
+
+内容回顾：
+	ES6的常用语法
+		-- 变量
+		-- 模板字符串
+		-- 函数 箭头函数 注意this
+		-- 类  class  extends 
+		-- 函数的单体模式
+		-- 数据解构
+		-- import  export   export default
+	Vue的常用指令
+		-- v-text  innerText
+		-- v-html  innerHtml
+		-- v-for
+		-- v-if    appendChild
+		-- v-show  display
+		-- v-bind  绑定属性
+		-- v-on    绑定事件
+		-- v-model  双向绑定
+		-- 指令修饰符
+		-- 计算属性
+		-- 数据监听
+		-- 自定义指令
+		-- 获取DOM
+	Vue的组件
+		-- 注册
+			-- 全局注册
+			-- 局部注册
+			-- 子组件的注册
+		-- 通信
+			-- 父子通信
+			-- 子父通信
+			-- 非父子通信
+		-- 混合
+			-- 代码复用
+			-- Mixins
+		-- 插槽
+			-- slot
+			-- 命名插槽
+	生命周期
+		-- beforeCreate
+		-- created
+		-- beforeMount
+		-- mounted
+		-- beforeUpdate
+		-- updated
+		-- beforeDestroy
+		-- destroyed
+	Vue路由
+		-- 注册
+			-- let url = [
+				{
+					path: "/",
+					name: xxx,
+					meta: {},
+					component: {
+						template: ``
+					}
+				}
+			]
+			-- let router = new VueRouter({
+					routes: url
+			})
+			-- const app = new Vue({
+					el: "#app",
+					router: router
+			})
+		-- 子路由的注册
+			-- children: [{},]
+		-- 路由的参数
+			-- path: "/course/:id?age=1"
+			-- "/course/xxxx" id: xxxx
+			-- this.$route.params.id
+			-- this.$route.query.age
+			-- this.$route  存放路由所有信息的对象
+			-- this.$router  VueRouter的实例化对象
+		-- 路由的重定向
+			-- redirect：{name: 'xx', params: {key: value}}
+		-- 手动路由
+			-- this.$router.push("/")
+		-- 路由的钩子
+			-- router.beforeEach(function(to, from, next){
+					to 你去哪
+					from 你从哪里来 
+					next 你接下来要做什么
+					to, from $route对象 路由的所有的信息
+			})
+	npm webpack vue-cli
+		-- npm
+			-- npm init -y  管理工作目录
+			-- npm i xxx@0.0.0  下载依赖包
+			-- npm uninstall xxxx 卸载
+			-- npm update xxx 更新
+		-- webpack 4
+			-- npm i webpack webpack-cli
+			-- webpack --mode development/production
+			-- 默认的入口文件
+				-- src目录下的index.js
+			-- 默认的出口文件
+				-- dist目录下的main.js
+		-- vue-cli 脚手架工具
+			-- npm i vue-cli
+			-- vue init webpack xxxx
+			-- cd xxxxx
+			-- npm run dev
+			-- npm run build
+	-- element-ui
+		-- 按照文档去安装
+今日内容：
+	vuex
+		-- 安装
+			npm i vuex
+		-- 配置
+			-- 导入vuex
+			   import vuex from "vuex"
+			-- vue使用vuex
+				vue.use(vuex)
+			-- 实例化仓库
+				new vuex.Store({
+					state: {},
+					getters: {},
+					mutations: {}
+				})
+			-- new Vue({
+				el: "#app",
+				store,
+			})
+		-- 获取仓库数据
+			this.$store.state.xxx
+			this.$store.getters.xxx
+		-- 改变仓库中的数据
+			-- 组件向仓库提交修改事件
+				this.$store.commit("事件名称", data)
+			--在仓库的mutations中
+				mutations: {
+					"事件名称"： function(state, data){
+							修改state中的数据
+					}
+				}
+		-- 注意计算属性
+			仓库中的数据建议都放在计算属性中
+	axios
+		-- 实现ajax技术的工具
+		-- 配置
+			-- 下载
+				npm i axios
+			-- 导入
+				import axios from "axios"
+			-- 在vue的原型链中加入方法
+				Vue.prototype.$axios = axios
+		-- 发送请求
+			this.$axios.request({url，method}).then(function(){}).catch(function(){})
+	前后端的接通
+		-- 后端设计一个接口
+		-- 前端通过axios发送请求拿到数据
+		-- 跨域问题
+RESTful规范
+	REST风格
+		-- 资源 网页中能看到的都是资源
+		-- URI  统一资源标识符
+		   URL  统一资源定位符
+		-- 统一资源接口
+			对资源的操作根据HTTP请求方式的不同来进行不同操作
+			遵循HTTP请求方式的语义
+		-- 前后端传输的是资源的表述
+		-- 展现的是资源的状态
+	凡是遵循REST风格实现的前后端交互都叫RESTful架构
+		-- 核心思想
+			-- 面向资源去编程  url中尽量名词不要用动词
+			-- 根据HTTP请求方式的不同对资源进行不同的操作
+		-- 在url中体现的
+			-- 体现版本
+				https://v2.bootcss.com/
+				https://bootcss.com/v2
+			-- 体现是否是API
+				https://v2.bootcss.com/api
+			-- 有过滤条件
+				https://v2.bootcss.com/course?page=1
+			-- 尽量用https
+		-- 在返回值中
+			-- 携带状态码
+			-- 返回值
+				-- get  返回查看的所有或者单条数据
+				-- post  返回新增的这条数据
+				-- put/patch  返回更新的这条数据
+				-- delete   返回值空
+			-- 携带错误信息
+			-- 携带超链接
+FBV和CBV区别				
+	    def dispatch(self, request, *args, **kwargs):
+        # 做分发的
+        if request.method.lower() in self.http_method_names:
+            handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
+        else:
+            handler = self.http_method_not_allowed
+        return handler(request, *args, **kwargs)	
+APIView和View的区别
+	-- APIView继承了View
+	-- APIView 重写了as_view以及 dispatch方法
+	-- 在dispatch里重新封装了request
+		-- request = Request()
+		-- 旧的request变成了_request
+	-- get请求数据
+		-- request.query_params
+	-- post请求的数据
+		-- request.data
+安装rest_framework
+	-- pip install djangorestframework
+	-- 注册rest_framework
+序列化
+	-- Python--json
+	-- 第一版 用values以及JsonResponse实现序列化
+	-- 第二版 用Django的serialize实现的序列化
+		-- 缺点  不能序列化外键关系
+	-- 第三版用DRF实现序列化
+		-- 第一步声明序列化器
+		-- 第二步 使用我们的序列化器序列化queryset
+			-- 把模型对象放入序列化器进行字段匹配
+				匹配上的字段进行序列化 匹配不上丢弃
+		-- 序列化好的数据在ser_obj.data中
+	
+	-- 外键关系的序列化是嵌套的序列化器对象 
+		注意many=True
+
+
+内容回顾：
+	Vuex 集中式状态管理工具
+		-- 配置
+			-- 下载 npm i vuex
+			-- 导入  import Vuex from "vuex"
+			-- Vue.use(Vuex)
+			-- 实例化仓库对象
+				new Vuex.Store({...})
+			-- 在Vue根实例中注册仓库
+				new Vue({
+					el："#app",
+					store,
+				})
+		-- 获取vuex中数据
+			-- this.$store.state.xxxx
+			-- this.$store.getters.xxxx
+		-- 改变vuex中的数据
+			-- 组件向仓库提交事件
+				this.$store.commit("事件名称"，data)
+			-- 仓库要处理提交的事件
+				mutations: {
+					"事件名称": function(state, data){
+						修改state中的数据
+					}
+				}
+	axios  ajax请求
+		-- 配置
+			-- 下载 npm i axios
+			-- 导入 import axios from "axios"
+			-- 加入原型链
+				Vue.prototype.$axios = axios
+		-- 在组件中发送请求
+			-- this.$axios.request({url, method, data,headers})
+				.then(function(data){})
+				.catch(function(data){})
+	前后端连接
+		-- 跨域
+			-- 中间件解决跨域
+	DRF框架
+		-- RESTful规范
+			REST风格   表述性状态转移
+				-- 资源  在web中凡是有被引用的必要都叫资源
+				-- URI  统一资源标识符
+				   URL  统一资源定位符
+				-- 统一资源接口
+					根据HTTP请求方式的不同对资源进行不同的操作
+				-- 前后端传递的资源的表述
+				-- 前端展示的是资源的状态
+				-- 通过超链接的指引来告诉用户接下来有哪些资源状态可以进入
+			RESTful规范
+				-- 核心思想
+					-- 面向资源去编程 url中尽量用名词不要动词
+					-- 根据HTTP请求方式的不同对资源进行不同的操作
+				-- url中体现
+					-- 版本
+					-- API
+					-- 过滤条件
+					-- HTTPS
+				-- 返回的要求
+					-- 携带状态码
+					-- 返回值
+						-- get 获取的所有或者单条数据
+						-- post 返回新增的这条数据
+						-- put/patch  返回更新的数据
+						-- delete 返回空
+					-- 携带错误信息
+					-- 携带超链接
+	FBV和CBV区别
+		def dispatch(self, request, *args, **kwargs):
+			# GET POST
+			# BookView().get
+			# DJango的View只做了CBV的分发
+			if request.method.lower() in self.http_method_names:
+				handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
+			else:
+				handler = self.http_method_not_allowed
+			return handler(request, *args, **kwargs)
+	下载DRF
+		-- pip install djangorestframework
+		-- 在app中注册rest_framework app
+	APIView 和View的区别
+		-- APIView继承了View
+		-- 重写了as_view方法
+			-- 豁免csrf
+		--  def dispatch(self, request, *args, **kwargs):
+				self.args = args
+				self.kwargs = kwargs
+				
+				# 重新封装request
+				# 新的request变成 Request的实例化对象
+				# 旧的request变成了_request
+				request = self.initialize_request(request, *args, **kwargs)
+				self.request = request
+				。。。。。。
+		--  def initialize_request(self, request, *args, **kwargs):
+				parser_context = self.get_parser_context(request)
+
+				return Request(
+					request,
+					parsers=self.get_parsers(),
+					authenticators=self.get_authenticators(),
+					negotiator=self.get_content_negotiator(),
+					parser_context=parser_context
+				)
+		-- Class Request(object):
+				self._request = 旧的request
+				def query_params(self):
+					return self._request.GET
+				def data(self):
+					return post请求的数据
+	序列化
+		-- django实现序列化
+			-- .values  JsonResponse
+			-- serializes.serialize  能够序列化queryset
+			-- 缺点不能解决外键关系的序列化
+		-- DRF的序列化组件
+			-- 第一步  声明序列化器 类比model
+			-- 第二步  在视图中使用序列化器序列化queryset
+			-- 序列化好的数据在 ser_obj.data
+今日内容：
+	序列化组件
+		-- 序列化
+		-- 反序列化 post请求
+			-- 确定新增的数据结构
+			-- 序列化器
+				-- 正序和反序列化字段不统一
+				-- required=False 只序列化不走校验
+				-- read_only=True  只序列化用
+				-- write_only=True  只反序列化用
+				-- 重写create方法
+			-- 验证通过返回ser_obj.validated_data
+			-- 验证不通过返回ser_obj.errors
+			
+		-- 反序列化 put/patch 请求
+			-- 重写update方法
+			-- ser_obj = BookSerializer(instance=obj, data=request.data, partial=True)
+			-- 验证通过返回ser_obj.validated_data
+			-- 验证不通过返回ser_obj.errors 
+				
+		-- 验证
+			-- 单个字段的验证  权重 222
+				def validate_字段名称（self, value）:
+					不通过 raise serializers.ValidationError("错误信息")
+					通过 return value
+			-- 多个字段的验证  权重 333
+				def validate(self, attrs):
+					attrs 是所有字段组成的字典
+					不通过 raise serializers.ValidationError("错误信息")
+					通过 return attrs
+			-- 自定义的验证  权重 111
+				def my_validate(value):
+					不通过 raise serializers.ValidationError("错误信息")
+					通过 return value
+				配置
+					-- 给字段加validators=[my_validate]
+		-- ModelSerializer
+			-- class Meta:
+				 model = 表名
+				 fields = "__all__"
+				 # exclude = [xxxx]
+				 depth = 1
+				 # depth 会让所有的外键关系字段变成read_only=True
+				 extra_kwargs={"默认的字段名称"：{自定义的参数配置信息}}
+			-- SerializerMethodField()  方法字段
+				def get_字段名称（self, obj）:
+					obj  每次序列化的模型对象
+					return 自定义的数据
+
+day93
+	序列化组件
+		-- 序列化以及反序列化
+			-- 声明序列化器
+				-- 自己写字段
+				-- 重写create以及update方法
+			-- GET请求
+				-- ser_obj = BookSerializer(queryset, many=True)
+				-- 如果有many=True认为我们的queryset是可迭代的对象
+				-- 循环我们的queryset 拿到每一个模型对象
+				-- 把每个模型对象的字段跟序列化器的字段进行匹配
+				-- 匹配成功的进行序列化 没匹配上的丢弃
+				-- 必须满足序列化器里的所有字段要求
+				-- 返回ser_obj.data
+			-- POST请求  
+				-- 注意序列化器里 序列化和反序列化字段不统一的情况
+					-- read_only   write_only  required=False
+				-- 视图
+					-- ser_obj = BookSerializer(data=request.data)
+						if ser_obj.is_valid():
+							ser_obj.save() 内部调用create方法
+							return Response(ser_obj.data)
+						return Response(ser_obj.errors)
+			-- put请求
+				-- 视图
+					-- ser_obj = BookSerializer(instance, data=request.data, partial=True)
+						if ser_obj.is_valid():
+							ser_obj.save() 内部调用create方法
+							return Response(ser_obj.data)
+						return Response(ser_obj.errors)				
+		-- 验证
+			-- 单个字段的验证
+				-- def validate_字段名称(self, value):
+						value是字段的值
+			-- 多个字段的验证
+				-- def validate(self, attrs):
+						attrs 传过来的所有的字段信息组成的字典
+			-- 自定义的验证
+				-- 自己定义一个验证函数
+					def my_validate(value):
+						value字段值
+				-- 给字段加validators=[my_validate,]
+		-- ModelSerializer
+			-- 默认生成关联的模型表里的所有字段
+			-- 配置
+				class Meta:
+					model=表名
+					fields="__all__"/["字段名",]
+					exclude=["字段名",]
+					depth=1 外键关系找一层  会让外键关系字段变成read_only=True
+					extra_kwargs={"字段名": {配置的属性}}
+			-- SerializerMethodField()
+				-- 方法字段 会调用它自己的钩子方法，把方法的返回值给字段
+				-- def get_字段名(self, obj):
+						循环序列化的每个模型对象就是obj
+						对obj进行ORM操作
+						return 自定义的数据结构
+今日内容：
+	视图组件
+		-- 第一次封装
+			-- GenericAPIView(APIView):
+				queryset = None
+				serializer_class = None
+				def get_queryset(self):
+					return self.queryset.all()
+				def get_serializer(self, *args, **kwargs):
+					return self.serializer_class(*args, **kwargs)
+			-- class ListModelMixin(object):
+					def list(...):
+						pass
+			-- 各个视图方法封装成类
+			-- 视图
+				class BookView(GenericAPIView, ListModelMixin):
+					def get(self, request):
+						return self.list(request)
+		-- 第二次封装 
+			-- 方便继承
+		-- 第三次封装
+			-- ViewSetMixin 重写as_view方法
+				在执行self.dispatch()方法之前
+				把self.get = self.list
+			-- 在ViewSetMixin后 路由才可以传参
+	路由组件
+		-- 导入
+			from rest_framwork.routers import DefaultRouter
+		-- 实例化对象
+			router = DefaultRouter()
+		-- 注册
+			router.register(路由，视图)
+		-- urlpatterns += router.urls
+		-- 生成的路由都是带参数的 你的视图类必须支持路由传参
+	版本控制
+		-- # 初始化我们的版本
+			version, scheme = self.determine_version(request, *args, **kwargs)
+			request.version, request.versioning_scheme = version, scheme
+		--  def determine_version(self, request, *args, **kwargs):
+				if self.versioning_class is None:
+					return (None, None)
+				scheme = self.versioning_class()
+				# scheme我配置的版本控制类的实例化对象
+				# 调用了determine_version(request, *args, **kwargs)
+				# 把方法的返回值给version
+				return (scheme.determine_version(request, *args, **kwargs), scheme)
+					
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
