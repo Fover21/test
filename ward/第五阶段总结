@@ -649,8 +649,310 @@ day93
 		
 		
 		
+day94
+内容回顾
+	RESTful规范
+	CBV以及FBV的区别
+	序列化组件
+	视图组件
+		-- 第一次封装
+			class GenericAPIView(APIView):
+				queryset = None
+				serializer_class = None
+
+				def get_querset(self, request):
+					return self.queryset.all()
+
+				def get_serializer(self, *args, **kwargs):
+					return self.serializer_class(*args, **kwargs)
+
+			class ListModelMixin(object):
+				def list(self, request):
+					queryset = self.get_queryset()
+					ser_obj = self.get_serializer(queryset, many=True)
+					return Response(ser_obj.data)
+
+			class BookView(GnericAPIView, ListModelMixin):
+				queryset = Book.objects.all()
+				serializer_class = BookSerializer
+
+				def get(self, request):
+					return self.list(request)
+		-- 第二次封装
+			-- 方便继承
+		-- 第三次封装
+			-- ViewSetMixin 重写了as_view方法
+			-- 路由可以传参
+	路由组件
+		-- from rest_framwork.routers import DefaultRouter
+		-- router = DefaultRouter()
+		-- router.register(路由， 视图)
+		-- 自动生成的都是带参数的路由
+		   router.urls
+	版本控制
+		-- 详情请见博客
+今日内容
+	认证
+	   -- https://www.cnblogs.com/GGGG-XXXX/p/9564651.html
+	权限
+	   -- https://www.cnblogs.com/GGGG-XXXX/p/9564651.html
+	频率
+		原理
+		1 拿到用户的IP地址
+		2 访问记录： {IP: [最近访问时间，....第一次的访问时间]}
+		3 确保这个列表最近的访问时间以及最远的访问时间差 《= 规定时间
+		4 判断列表的长度 《= 设置的访问频率
+		使用DRF内部的频率类
+			-- 必须实现 get_cache_key方法
+			-- 必须配置 scope
+			-- settings 中配置
+				REST_FRAMEWORK = {
+				    "DEFAULT_THROTTLE_RATES": {
+				        "WD": "3/m"
+				    }
+				}
 		
 		
+
+
+
+day95
+内容回顾：
+	序列化
+		-- GET 请求
+			-- 声明一个序列化器
+				-- 声明所有想要序列化的字段
+			-- 视图
+				-- ser_obj = BookSerializer(queryset, many=True)
+				-- return Response(ser_obj.data)
+		-- POST请求
+			-- 声明序列化器
+			-- 注意正序和反序字段不统一的情况
+				-- read_only
+				-- write_only 
+				-- required = False
+				-- 重写create方法
+			-- 视图
+				-- ser_obj = BookSerializer(data=request.data)
+				-- if ser_obj.is_valid():
+					  ser_obj.save()
+					  return Response(ser_obj.data)
+				   return Response(ser_obj.errors)
+		-- PUT/PATCH请求
+			-- 声明序列化器
+				-- 重写update方法
+			-- 视图
+				-- ser_obj = BookSerializer(instance, data=request.data, partial=True)
+				-- if ser_obj.is_valid():
+					  ser_obj.save()
+					  return Response(ser_obj.data)
+				   return Response(ser_obj.errors)
+		-- ModelSerializer
+			-- 配置
+				class Meta:
+					model = 表名
+					fields = "__all__"/ []
+					# exclude = []
+					depth = 1 # 外键关系找几层 把外键关系都变成read_only=True
+					extra_kwargs = {字段名称：{增加的属性}}
+			-- SerializerMethodField 方法字段
+				def get_字段名称(self, obj):
+					obj 是我们序列化的时候传过来的每个模型对象
+					return 我想要数据的结构
+	视图
+		-- 第一次封装
+			class GenericAPIView(APIView):
+				queryset = None
+				serializer_class = None
+				
+				def get_queryset(self):
+					return self.queryset.all()
+				
+				def get_serliazer(self, *args, **kwargs):
+					return self.serializer_class(*args, **kwargs)
+			class ListModelMixin(object):
+				def list(self, request):
+					写原来get请求序列化的逻辑
+					
+			class BookView(GenericAPIView, ListModelMixin):
+				queryset = Book.objects.all()
+				serializer_class = BookSerializer
+				
+				def get(self, request):
+					return self.list(request)
+		-- 第二次封装
+			-- 什么都没干 就是方便继承去了~~~
+		-- 第三次封装
+			-- ViewSetMixin  重写了as_view方法
+			-- class ModelViewSet(ViewSetMixin, GenericAPIView, ListModelMixin):
+					queryset = Book.objects.all()
+					serializer_class = BookSerializer
+				
+	路由
+		-- BookView.as_view({"get": "list", "post": "create"})
+		-- from rest_framework.routers import DefaultRouter
+		-- router = DefaultRouter()
+		-- router.register(路由， 视图)
+		-- 生成的路由在 router.urls里
+	版本
+	认证
+		-- raise AuthenticationFailed(自定义的异常信息)
+	权限
+	频率
+今日内容：
+	分页 DRF提供三种分页方式
+		-- ///////?page=1&size=5
+		-- ///////?limit=2&offset=3
+		-- ///////?加密的游标 只有上一页下一下
+		
+	解析器
+		-- Content-Type 我给你的是什么数据类型
+			-- application/x-www-form-urlencoded 表单数据
+			-- multipart/form-data  文件的
+			-- application/json
+				-- request.body
+		-- Accept  我能解析的是什么数据类型
+		-- Django的解析器
+			request.POST Form表单的数据
+			request.FILES  文件的数据
+		-- DRF解析器
+			-- 拿前端传过来的Content-Type 跟我自己所有的解析器进行匹配
+			-- 匹配上了返回这个解析器
+			-- 并且调用这个解析器的parse方法 进行解析数据
+		-- DRF默认配置的解析器
+		
+	渲染器
+		'DEFAULT_RENDERER_CLASSES': (
+			'rest_framework.renderers.JSONRenderer',
+			'rest_framework.renderers.BrowsableAPIRenderer',
+        ),
+明天：
+	跨域
+	ContentType组件 django的
+	表结构
+	小接口
+	
+	
+	
+	
+内容回顾：
+	分页组件
+		流程：
+			-- 实例化分页器对象
+			-- 调用分页器的分页方法进行分页
+			-- 把分页好的数据用序列化器进行序列化
+			-- 调用响应方法返回带超链接的响应
+		用DRF给我们提供的分页器：
+			-- 写一个类继承给我们提供的分页类
+			-- 在自己的类里写配置信息 去源码里看人家提供分页类要求什么
+			-- 调用上面的分页流程
+		源码内部调用分页器：
+			-- get--list方法
+			-- 在list方法里
+				page = self.paginate_queryset(queryset)
+				# 我们自己配置的分页类的实例化对象.paginate_queryset()
+				# 拿到分页数据 []
+				if page is not None:
+					serializer = self.get_serializer(page, many=True)
+					return self.get_paginated_response(serializer.data)
+	解析器
+		原理：
+			-- 拿到前端传过来的Content-Type
+			-- 获取所有的配置的解析器
+			-- 拿到Content-Type跟解析器里的media-type(标识我能解析什么数据类型)进行匹配
+			-- 匹配成功返回解析器
+			-- 调用解析器里的parse方法
+		Django的解析器
+			-- request.POST
+			-- request.FILES
+			-- request.body
+		DRF的解析器
+			-- request.data
+			-- pass
+		DRF默认的解析器
+			-- Json
+			-- FormData
+			-- 多类型的
+			'DEFAULT_PARSER_CLASSES': (
+				'rest_framework.parsers.JSONParser',
+				'rest_framework.parsers.FormParser',
+				'rest_framework.parsers.MultiPartParser'
+			),
+	渲染器
+		json
+		浏览器的
+		'DEFAULT_RENDERER_CLASSES': (
+			'rest_framework.renderers.JSONRenderer',
+			'rest_framework.renderers.BrowsableAPIRenderer',
+		),
+今日内容：
+	跨域
+		浏览器的同源策略
+			-- 阻止ajax请求不阻止src请求
+		JsonP 解决跨域的方式
+		添加响应头
+			-- 简单请求和复杂请求
+				简单请求满足：
+					HTTP方法是下列方法之一
+
+				　　HEAD， GET，POST
+
+				HTTP头信息不超出以下几种字段
+
+				　　Accept， Accept-Language， Content-Language， Last-Event-ID
+
+				　　Content-Type只能是下列类型中的一个
+
+				　　　　application/x-www-from-urlencoded
+
+				　　　　multipart/form-data
+
+				　　　　text/plain
+			-- 复杂请求
+				-- 先发送预检请求 OPTIONS
+			-- 写一个中间件
+				class MyCors(MiddlewareMixin):
+					def process_response(self, request, response):
+						response["Access-Control-Allow-Origin"] = "*"
+						if request.method == "OPTIONS":
+							# 复杂请求会先发预检
+							response["Access-Control-Allow-Headers"] = "Content-Type"
+							response["Access-Control-Allow-Methods"] = "PUT,PATCH,DELETE"
+						return response
+						
+	ContentType组件
+		-- 一张表跟多张表创建外键关系的时候
+		--  content_type = models.ForeignKey(to=ContentType)
+			到ContentType 定位到表
+			object_id = models.IntegerField()
+			# 定位到对象id
+			content_object = GenericForeignKey("content_type", "object_id")
+			# 不会生成字段 只用于关联到对象的
+		
+	课程模块：
+		数据接口： 通过orm查询数据 序列化返回 
+	登录认证：
+	购物模块：
+	课程模块的表结构：
+		-- 课程分类表
+		-- 课程表
+		-- 课程详情表
+			-- 跟课程表一对一的关系
+		-- 学位课程表
+		-- 评论表 ContentType实现
+		-- 用户表
+		-- 价格策略表 ContentType实现
+		-- 课程大纲表
+		-- 讲师表
+		-- 章节表
+		-- 课时表
+		-- 常见问题表 Content-Type
+	
+	
+	
+	
+	
+	
 		
 		
 		
